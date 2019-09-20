@@ -23,7 +23,8 @@ class Message(object):
         elif "bot_id" in self._message:
             return self._message["bot_id"]
         else:
-            logging.error("No user ID on %s", self._message)
+            #logging.error("No user ID on %s", self._message)
+            pass
 
 
     @property
@@ -73,6 +74,17 @@ class Message(object):
         text = self._message.get("text")
         if text:
             text = self._formatter.render_text(text)
+        #BEGIN JSR
+	if self._message.get("subtype") == "message_deleted":
+            text = "(DELETED): " + self._message.get("original").get("text")
+            text = self._formatter.render_text(text)
+        if self._message.get("subtype") == "message_changed" and "edited_by" in self._message:
+            text = "(ORIGINAL): " + self._message.get("original").get("text") + " <br>(EDITED): " + self._message.get("original").get("text")
+            text = self._formatter.render_text(text)
+        elif self._message.get("subtype") == "message_changed" and "edited_by" not in self._message:
+            text = "(EDITED): " + self._message.get("message").get("text")
+            text = self._formatter.render_text(text)
+        #END JSR
         return text
 
     def user_message(self, user_id):
@@ -192,6 +204,6 @@ class LinkAttachment(object):
         if fields:
             logging.debug("Rendering with markdown markdown %s for %s", process_markdown, fields)
         return [
-            {"title": e["title"], "short": e.get("short", False), "value": self._formatter.render_text(e["value"], process_markdown)}
+            {"title": e["title"], "short": e["short"], "value": self._formatter.render_text(e["value"], process_markdown)}
             for e in fields
         ]

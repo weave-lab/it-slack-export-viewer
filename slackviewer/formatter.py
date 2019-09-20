@@ -24,7 +24,7 @@ class SlackFormatter(object):
             return User({"name":"slackbot"})
         if message.get("subtype", "").startswith("bot_") and message["bot_id"] not in self.__USER_DATA:
             bot_id = message["bot_id"]
-            logging.debug("bot addition for %s", bot_id)
+            #logging.debug("bot addition for %s", bot_id)
             if "bot_link" in message:
                 (bot_url, bot_name) = message["bot_link"].strip("<>").split("|", 1)
             elif "username" in message:
@@ -42,9 +42,17 @@ class SlackFormatter(object):
                 "is_app_user": True
             })
         user_id = message.get("user") or message.get("bot_id")
+        #BEGIN JSR - alternate user_id based on deleted message!
+        if message.get("subtype") == "message_deleted":
+            user_id = message.get("original").get("user")
+        if message.get("subtype") == "message_changed" and "edited_by" in message:
+            user_id = message.get("original").get("user")
+        if message.get("subtype") == "message_changed" and "edited_by" not in message:
+            user_id = message.get("message").get("user")
+        #END JSR
         if user_id in self.__USER_DATA:
             return self.__USER_DATA.get(user_id)
-        logging.error("unable to find user in %s", message)
+        #logging.error("unable to find user in %s", message)
 
     def render_text(self, message, process_markdown=True):
         message = message.replace("<!channel>", "@channel")
