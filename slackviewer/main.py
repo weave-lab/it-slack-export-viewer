@@ -61,7 +61,8 @@ def main(port, archive, ip, no_browser, channels, no_sidebar, no_external_refere
     configure_app(app, archive, channels, no_sidebar, no_external_references, debug)
 
     if not no_browser and not test:
-        webbrowser.open("http://{}:{}".format(ip, port))
+        #webbrowser.open("http://{}:{}".format(ip, port))
+	pass
 
     if not test:
         app.run(
