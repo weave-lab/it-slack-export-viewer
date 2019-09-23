@@ -56,7 +56,7 @@ class SlackFormatter(object):
         #END JSR
         if user_id in self.__USER_DATA:
             return self.__USER_DATA.get(user_id)
-        #logging.error("unable to find user in %s", message)
+        logging.error("unable to find user in %s", message)
 
     def render_text(self, message, process_markdown=True):
         message = message.replace("<!channel>", "@channel")
