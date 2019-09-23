@@ -19,7 +19,7 @@
             {% endif %}
             <div class="message">
                 <div class="username">{{ message.username }}
-                    {%if message.user.email%} <span class="print-only user-email">({{message.user.email}})</span>{%endif%}
+                    {%if message.user%} {%if message.user.email%} <span class="print-only user-email">({{message.user.email}})</span>{%endif%} {%endif%}
                 </div>
                 <a href="#{{ message.id}}"><div class="time">{{ message.time }}</div></a>
                 <div class="msg">
