@@ -3,6 +3,10 @@ import re
 
 import emoji
 import markdown2
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 
 from slackviewer.user import User
 
