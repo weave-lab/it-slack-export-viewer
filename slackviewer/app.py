@@ -7,6 +7,15 @@ app = flask.Flask(
     static_folder="static"
 )
 
+@app.route("/")
+def index():
+    channels = list(flask._app_ctx_stack.channels.keys())
+    if "announcements" in channels:
+        return channel_name("announcements")
+    else:
+        return channel_name(channels[0])
+
+
 
 @app.route("/channel/<name>/")
 def channel_name(name):
@@ -15,14 +24,20 @@ def channel_name(name):
     groups = list(flask._app_ctx_stack.groups.keys())
     dm_users = list(flask._app_ctx_stack.dm_users)
     mpim_users = list(flask._app_ctx_stack.mpim_users)
-
+    #BEGIN JSR - do sidebar for only one channel to create the original index
+    if name == "announcements":
+        nosb = False;
+    else:
+        nosb = True;
+    #END JSR
     return flask.render_template("viewer.html", messages=messages,
                                  name=name.format(name=name),
                                  channels=sorted(channels),
                                  groups=sorted(groups),
                                  dm_users=dm_users,
                                  mpim_users=mpim_users,
-                                 no_sidebar=app.no_sidebar,
+                                 #no_sidebar=app.no_sidebar,
+                                 no_sidebar=nosb,
                                  no_external_references=app.no_external_references)
 
 
@@ -83,10 +98,3 @@ def mpim_name(name):
                                  no_external_references=app.no_external_references)
 
 
-@app.route("/")
-def index():
-    channels = list(flask._app_ctx_stack.channels.keys())
-    if "general" in channels:
-        return channel_name("general")
-    else:
-        return channel_name(channels[0])

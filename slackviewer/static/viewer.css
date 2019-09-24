@@ -171,6 +171,7 @@ body {
 .list li:hover {
     text-decoration: none;
     background: #3E313C;
+    cursor: pointer;
 }
 
 .list li a:hover {

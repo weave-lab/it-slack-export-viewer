@@ -80,7 +80,9 @@ class SlackFormatter(object):
         if process_markdown:
             # Handle bold (convert * * to ** **)
             message = re.sub(r'\*', "**", message)
-
+            #BEGIN JSR - fix issue where triple ticks do not have new line after - markdown2 expects this, slack does not require it though
+            message = message.replace("```","```\n")
+            #END JSR
             message = markdown2.markdown(
                 message,
                 extras=[
@@ -90,11 +92,6 @@ class SlackFormatter(object):
                     "pyshell"
                 ]
             ).strip()
-
-        # Special handling cases for lists
-        #BEGIN JSR
-        message = message.replace("\n\n<ol>", "<ol>")
-        #END JSR
         message = message.replace("\n\n<ul>", "<ul>")
         message = message.replace("\n<li>", "<li>")
 
