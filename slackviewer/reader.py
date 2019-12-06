@@ -104,8 +104,12 @@ class Reader(object):
         all_mpim_users = []
 
         for mpim in mpims:
-            mpim_members = {"name": mpim["name"], "users": [self.__USER_DATA[m] for m in mpim["members"]]}
-            all_mpim_users.append(mpim_members)
+        #add try catch - jrees 12.6.2019
+            try:
+                 mpim_members = {"name": mpim["name"], "users": [self.__USER_DATA[m] for m in mpim["members"]]}
+                 all_mpim_users.append(mpim_members)
+            except KeyError:
+                 print mpim
 
         return all_mpim_users
 
